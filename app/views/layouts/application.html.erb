@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  
+  <head>
+    <title>Workspace</title>
+    <%= stylesheet_link_tag "application", media: "all", "data-turbolinks-track"=>true %>
+    <%= javascript_include_tag "application", "data-turbolinks-track"=>true %>
+    <%= csrf_meta_tags %>
+  </head>
+  
+  <body>
+    <!-- navbar code -->
+    <header class="navbar navbar-inverse navbar-fixed-top bs-docs-nav" role="banner">
+      <div class="container">
+        <nav role="navigation">
+          <ul class="nav navbar-nav">
+            <li>
+              <a href="/"><i class = "fa fa-home"></i> Home</a>
+            </li>
+            <li>
+              <a href="/books"><i class = "fa fa-search"></i> Browse</a>
+            </li>
+            <li>
+              <a href="#"><i class="fa fa-usd"></i> Sell</a>
+            </li>
+            <li>
+              <a href="#"><i class = "fa fa-navicon"></i> About</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+    <!-- end navbar code -->
+    <!-- begin content -->
+    <div class="container container-secondary">
+      <%=yield %>
+    </div>
+    <!-- end content -->
+  </body>
+
+</html>
