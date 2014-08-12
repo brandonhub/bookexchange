@@ -14,7 +14,9 @@ class BooksController < ApplicationController
 
   # GET /books/new
   def new
-    @book = Book.new
+    if has_access
+      @book = Book.new
+    end
   end
 
   # GET /books/1/edit
@@ -25,7 +27,11 @@ class BooksController < ApplicationController
   # POST /books.json
   def create
     @book = Book.new(book_params)
-
+    
+    #some initialization
+    @book.vendor_id = current_user.id
+    @book.status_id = Status.where("status = 'On Sale'").first.id
+    
     respond_to do |format|
       if @book.save
         format.html { redirect_to @book, notice: 'Book was successfully created.' }
@@ -42,7 +48,7 @@ class BooksController < ApplicationController
   def update
     respond_to do |format|
       if @book.update(book_params)
-        format.html { redirect_to @book, notice: 'Book was successfully updated.' }
+        format.html { redirect_to books_path, notice: 'Book was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: 'edit' }

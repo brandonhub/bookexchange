@@ -1,37 +1,168 @@
-<h2>Books On Sell</h2>
+<legend><h2>Books on Sale</h2></legend>
 
-<table>
-  <thead>
-    <tr>
-      <th>Title</th>
-      <th>Price</th>
-      <th>Vendor</th>
-      <th>Buyer</th>
-      <th>Subject</th>
-      <th>Condition</th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
+<div class = "instructions span11 center">Welcome to the book listings. All available books are shown on this list. The list includes a search bar wihch enables users to search
+    for a specefic book or apply a filter to the current listing. For more infomraiton see "Browsing tips."
+  </div>
 
-  <tbody>
-    <% @books.each do |book| %>
+<br/>
+
+<div class="span3">
+
+  <div class = linkHolder>
+  
+    <ul>
+      <li><a href = "#">Browsing tips <i class = "fa fa-question"></i></a></li>
+      <li><a href = "#">Sell Books <i class = "fa fa-usd"></i></a></li>
+      <li><a href = "#">My Books <i class = "fa fa-book"></i></a></li>
+      <li><a href = "#">Home <i class = "fa fa-home"></i></a></li>
+    </ul>
+    
+    <div class = "pull-right">
+      <h3>My Books</h3>
+      <% if current_user %>
+        <table class = "mini-table ">
+        
+        <% myBooks = Book.where( vendor_id: current_user.id) %>
+        <% if myBooks.any? %>
+        
+          <thead class = align-middle>
+            <th>Title</th>
+            <th>Status</th>
+            <th></th>
+          </thead>
+        
+          <% myBooks.each do |b| %>
+          <tr>
+            <td><%= b.title %></td>
+            <td><%= b.status.status %></td>
+            <td><button id = "view-<%= b.id %>" class = "btn btn-sm btn-default viewButton">View</button></td>
+          </tr>
+          <% end %>
+        <% else %>
+          <tr>
+            <tr colspan = "2">You have no books</tr>
+          </tr>
+        <% end %>
+        </table>
+      <% else %>
+        Login to see books you currently have on sell
+      <% end %>
+      </div>
+      
+      
+  </div>
+</div>
+
+<div class="span8">
+  
+  <table id="booksTable" class="stripe">
+    <thead>
       <tr>
-        <td><%= book.title %></td>
-        <td><%= book.price %></td>
-        <td><%= book.vendor_id %></td>
-        <td><%= book.buyer_id %></td>
-        <td><%= book.subject_id %></td>
-        <td><%= book.condition_id %></td>
-        <td><%= link_to 'Show', book %></td>
-        <td><%= link_to 'Edit', edit_book_path(book) %></td>
-        <td><%= link_to 'Destroy', book, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <th>Title</th>
+        <th>Price</th>
+        <th>Vendor</th>
+        <th>Condition</th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      <% @books.each do |book| %>
+        <tr>
+          <td>
+            <%=link_to book.title, book %>
+          </td>
+          <td>
+            <%=book.price %>
+          </td>
+          <td>
+            <%=User.find(book.vendor_id).name %>
+          </td>
+          <td>
+            <%=book.condition.name %>
+          </td>
+        </tr>
+        <% end %>
+    </tbody>
+  </table>
+  <%=link_to 'New Book', new_book_path %>
+</div>
+<br/>
 
-<br>
 
-<%= link_to 'New Book', new_book_path %>
+<% myBooks.each do |book| %>
+<div id = "modal-<%=book.id%>" class="modalDialog bookModal">
+	<div>
+		<div class = "modalHeader">
+		  <span class = "large-field"> <%= book.title %> </span>
+		</div>
+		<div class = "modalBody">
+  		<ul>
+  		<li>
+  		  <strong>Status: </strong> <%= book.status.status %>
+  		</li>
+        <li>
+  		    <strong>Price: </strong><%=book.price %>
+        </li>
+	      <li>
+	        <strong>Details: </strong><%= book.details %>
+	      </li>
+  		  <li>
+  		    <strong>Condition: </strong><%= book.condition.name %>
+  		  </li>
+	      <% if book.buyer_id != nil %>
+	        <li>
+	          <strong>Buyer: </strong><%= book.buyer_id %>
+	        </li>
+	      <% end %>
+      </ul>
+  		<div class = "align-right">
+  	  <%= link_to raw("<i class = 'fa fa-pencil'></i> Edit"), edit_book_path(book), :class => "btn btn-primary" %> 
+  	   <%= link_to raw("<i class = 'fa fa-trash-o'></i> Delete"), book_path(book), :method => "delete", :class => "btn btn-danger" %> 
+  	  <button class = "btn btn-default closeBookModal">Close</button>
+  	  </div>
+	  </div>
+	</div>
+</div>
+<% end %>
+
+<script type="text/javascript">
+
+  $(document).ready(function() {
+    //hiding generated book modals
+    
+    $(".bookModal").hide()
+    
+    $(".viewButton").click(function(){
+      
+      //first get id in order to indentify which modal to activate
+      var id = $(this).attr('id');
+
+      var idNum = id.substring(id.indexOf('-'), id.length);
+      
+      //hide any existing book modals
+      $(".bookModal").hide()
+      
+      //activate select modal
+      console.log("#modal" + idNum)
+      $("#modal" + idNum).fadeIn()
+    })
+    
+    $(".closeBookModal").click(function(){
+      $(".bookModal").hide();
+    })
+    
+    //initializing data tables
+    $('#booksTable').dataTable({
+      "bLengthChange": false,
+      "sDom": 'l<"title">frtip',
+      "bInfo": false,
+      "oLanguage": { "sSearch": "" } 
+    });
+    
+    
+    $("#booksTable_filter").prependTo(".linkHolder"); //moving search bar 
+    $("[type = 'search']").attr("placeholder", "Search Books")  //assgning it placeholding text
+    
+    
+  });
+  
+</script>

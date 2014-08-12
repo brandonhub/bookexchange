@@ -1,11 +1,20 @@
 Workspace::Application.routes.draw do
+  
+  #resource routing
   resources :books
+  resources :users
 
-  # The priority is based upon order of creation: first created -> highest priority.
-  # See how all your routes lay out with "rake routes".
-
-  # You can have the root of your site routed with "root"
-   root 'application#home'
+  #root page
+  root 'application#home'
+  
+  #other pages
+  get "/error" => "application#error"
+  get "/tips" => "application#tips"
+   
+  #omniauth routes
+  get "/auth/:provider/callback" => "sessions#create"
+  get "/signout" => "sessions#destroy", :as => :signout
+  get '/auth/failure', :to => 'sessions#failure'
    
 
   # Example of regular route:

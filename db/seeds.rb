@@ -5,3 +5,9 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
+
+#subjects = Subject.create([{name: 'Humanities'},{name: 'Social Science'},{name: 'Applied Science'},{name: 'Mathmatics'},{name: 'Visual Arts'}]);
+
+#conditions = Condition.create([{name: 'Excellent'},{name: 'Good'},{name: 'Fair'},{name: 'Poor'},{name: 'Trash'}]);
+
+statuses = Status.create([{status: 'On Sale'}, {status: 'Offer Made'}, {status: 'Sold'}]);

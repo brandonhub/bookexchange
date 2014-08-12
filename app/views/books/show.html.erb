@@ -1,8 +1,13 @@
-<p id="notice"><%= notice %></p>
+
 
 <p>
   <strong>Title:</strong>
   <%= @book.title %>
+</p>
+
+<p>
+  <strong>Status:</strong>
+  <%= @book.status.status %>
 </p>
 
 <p>
@@ -26,13 +31,8 @@
 </p>
 
 <p>
-  <strong>Subject:</strong>
-  <%= @book.subject_id %>
-</p>
-
-<p>
   <strong>Condition:</strong>
-  <%= @book.condition_id %>
+  <%= @book.condition.name %>
 </p>
 
 <%= link_to 'Edit', edit_book_path(@book) %> |

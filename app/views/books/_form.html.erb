@@ -1,45 +1,190 @@
-<%= form_for(@book) do |f| %>
+<%= form_for @book, :html=>{:class => 'form-horizontal' } do |f| %>
   <% if @book.errors.any? %>
     <div id="error_explanation">
-      <h2><%= pluralize(@book.errors.count, "error") %> prohibited this book from being saved:</h2>
-
+      <h2>
+        <%= pluralize(@book.errors.count, "error") %> prohibited this book from being saved:</h2>
       <ul>
-      <% @book.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
+        <% @book.errors.full_messages.each do |msg| %>
+          <li>
+            <%= msg %>
+          </li>
+        <% end %>
       </ul>
     </div>
   <% end %>
+  
+    <div id = "bookWizard" class = "span8 text-center center" >
+      <div id = "step1" class =  "item">
+        <h3>Book Title</h3>
+        <p class = "text-muted">Ready to make some money? The first step is simple. Just enter the title of the book you want to sell. I recommend 
+          only entering the actual title and perhaps an edition number, further details can be entered later on in the detls field. Also save any information 
+          about class, condition, and price for later.
+        </p>
+        
+        <br/>
+        
+        <%= f.text_field :title, :class=>'text_field', :placeholder => "Enter Title" %>
+        
+        <br/>
+        <br/>
+        
+        <span id = "cancel" class = "btn btn-default"><i class="fa fa-chevron-circle-left"></i> Cancel</span>
+        <span id = "next1" class = "btn btn-default">Next <i class="fa fa-chevron-circle-right"></i></span>
+        
+      </div>
+      
+      <div id = "step2" class = "item">
+        <h3>Details</h3>
+        <p class = "text-muted">Okay, next up are the book details. What goes in this field is entirely up to you. Just know that there are fields for "Condition"
+         and "Subject" coming up. Feel free to put any extra information such as bonus discs, included materials, subscriptions, or anything you feel would
+         educate your prospective customers.
+        </p>
+        
+        <br/>
+        
+        <%= f.text_area :details, :class=>'text_area', :id => "bookDetails" , :placeholder => "Enter Details"%>
+        
+        <br/>
+        <br/>
+        <br/>
+        
+         <span id = "back2" class = "btn btn-default"><i class="fa fa-chevron-circle-left"></i> Back</span>
+        <span id = "next2" class = "btn btn-default">Next <i class="fa fa-chevron-circle-right"></i></span>
+        
+      </div>
+      
+      <div id = "step3" class = "item">
+        <h3>Condition</h3>
+        <p class = "text-muted">This next part is important. Condition is extremely important in any sort of second-hand purchase. Honesty would
+        surely be appreciated by you're prospective buyers.</p>
+        
+        <% selected = Condition.first %>
+        <% if @book.condition_id != nil %>
+          <% selected = Condition.find(@book.condition_id) %>
+        <% end %>
+        
+        <table class = "align-right center">
+         <% Condition.all.each do |rt| %>
+          <div class = "radio-holder">
+            <tr>
+              <td>
+                <strong><%= rt.name %>: </strong>
+              </td>
+              <td>
+                <%= f.radio_button :condition_id, rt.id %>
+              </td>
+            </tr>
+          </div>
+          <% end %>
+        </table>
+        
+        <!--<ul class= "center align-left small-list">-->
+        <!--  <li>Use "Excellent" if the book is near perfect condition</li>-->
+        <!--  <li>Use "Good" if it's clear that the book has been used before, but it's state in no way hinders further usage.</li>-->
+        <!--  <li>Use "Fair" if your book isn't in good condition. Ripped pages, lots of wiritng on the pages, loose bindings and traits of that sort warrant a "fair" rating.</li>-->
+        <!--  <li>Use "Poor" if your book hsa been heavily used. Missing pages, mutilated covers and the such constitute a "Poor" rating.</li>-->
+        <!--  <li>Honestly, if you plan on assigning the "Trash" condition, I would consider simply recycling your book, but If you insist, it's here for you to use...</li>-->
+        <!--</ul>-->
+        
+        <br/>
+        <br/>
+        <br/>
+        
+        <span id = "back3" class = "btn btn-default"><i class="fa fa-chevron-circle-left"></i> Back</span>
+        <span id = "next3" class = "btn btn-default">Next <i class="fa fa-chevron-circle-right"></i></span>
+        
+      </div>
+      
+      <div id = "step4" class = "item">
+        <h3>Pricing</h3>
+        <p class = "text-muted">Alright, almost done. Last thing you need to do is set the price. Consider the prices of available at the bookstore, online retailers, and the
+        condition of your book. You can makert your book to perfection but nobody is gonna buy if the price isn't right. 
+        </p>
 
-  <div class="field">
-    <%= f.label :title %><br>
-    <%= f.text_field :title %>
+        <br/>
+        
+        <%= f.text_field :price, :class=>'text_field', :placeholder => "Enter Price i.e. 20.25" %>
+        
+        <br/>
+        <br/>
+        <br/>
+        
+        <p>If you feel you're ready to put the book on sale, press the span below. Remember, you can always change any of the information about a book
+          you have on sale by navigating to "Browse" and the selecting "My Books" on the left.
+        </p>
+        
+        <!--hidden for current user and initial status -->
+        <%= f.hidden_field :status_id, :value => Status.where("status = 'On Sale'").first.id %>
+        
+        <%= button_tag(type: 'submit', class:"btn btn-success btn-lg") do %>
+          <i class="fa fa-check"></i> Put On Sale
+        <% end %>
+        
+        <br/>
+        <br/>
+        
+         <span id = "back4" class = "btn btn-default"><i class="fa fa-chevron-circle-left"></i> Back</span>
+        
+      </div>
+      
+    </div>
+      
   </div>
-  <div class="field">
-    <%= f.label :details %><br>
-    <%= f.text_field :details %>
-  </div>
-  <div class="field">
-    <%= f.label :price %><br>
-    <%= f.text_field :price %>
-  </div>
-  <div class="field">
-    <%= f.label :vendor_id %><br>
-    <%= f.number_field :vendor_id %>
-  </div>
-  <div class="field">
-    <%= f.label :buyer_id %><br>
-    <%= f.number_field :buyer_id %>
-  </div>
-  <div class="field">
-    <%= f.label :subject_id %><br>
-    <%= f.number_field :subject_id %>
-  </div>
-  <div class="field">
-    <%= f.label :condition_id %><br>
-    <%= f.number_field :condition_id %>
-  </div>
-  <div class="actions">
-    <%= f.submit %>
-  </div>
+  
 <% end %>
+  
+  <script>
+  
+  $(document).ready(function(){
+    
+    //wizard functionality
+    
+    $(".item").hide();
+    $("#step1").show();
+    
+    //step 1
+    $('#cancel').click(function(){
+      location.href = "/books";
+    })
+    $('#next1').click(function(){
+      $('#step1').fadeOut(function(){
+              $('#step2').fadeIn();
+      });
+    })
+    
+     //step 2
+     $('#next2').click(function(){
+      $('#step2').fadeOut(function(){
+              $('#step3').fadeIn();
+      });
+    })
+    $('#back2').click(function(){
+      $('#step2').fadeOut(function(){
+              $('#step1').fadeIn();
+      });
+    })
+    
+     //step 3
+     $('#next3').click(function(){
+      $('#step3').fadeOut(function(){
+              $('#step4').fadeIn();
+      });
+    })
+    $('#back3').click(function(){
+      $('#step3').fadeOut(function(){
+              $('#step2').fadeIn();
+      });
+    })
+    
+    //final step
+     $('#back4').click(function(){
+      $('#step4').fadeOut(function(){
+              $('#step3').fadeIn();
+      });
+    })
+    
+  })
+  
+</script>
+
+
