@@ -1,28 +1,3 @@
-== README
+Simple web application meant to aid in used textbook transactions between college students. The app is built on the ruby on rails framework and utilizes jQuery and Bootstrap on the front end. Authentication is handled by the omni-auth authentication system (specifically the facebook component).
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
-
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
-
-
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
+The app was never released but most functionality is complete
